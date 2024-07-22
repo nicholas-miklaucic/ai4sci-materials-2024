@@ -148,3 +148,140 @@ more reasonable baseline.
 #align(center, image("images/random_forest.png", height: 90%))
 
 = A Practical Demonstration
+
+= Neural Networks
+
+== Gradient Descent
+Let's imagine fitting an equation like $a x^2 + b x + c$ to some data.
+
+We can define a _loss function_ that quantifies the error of our model.
+
+Then, using calculus, we can figure out how changing each parameter a little bit will affect the
+loss. Using that information, we can change the parameters to decrease the loss. Repeating this
+enough times will let us find good values of parameters, hopefully.
+
+(Calculating gradients is what PyTorch does, so we won't have to worry about any calculus!)
+
+== Gradient Descent
+Imagine trying to get down from a mountain in a blizzard, so you can't see at all in front of you.
+You would probably just try to go downhill, and that's what we do here. We aren't guaranteed to find
+the best model, but this works well in practice. (Interestingly, this is not at all how humans
+learn!)
+
+#align(center, image("images/grad-descent.png", height: 60%))
+
+== Everything's a Number If You Try Hard Enough
+What we just described only works when we have a smooth function that maps numbers to numbers and a
+quantitative loss function. 
+
+How can we make a function that takes in non-numeric input, like a chemical element? A simple method
+is _one-hot encoding_: we have columns for each element that are 1 or 0 depending on whether the
+input is that element or not.
+
+$
+f("H") &= (1, 0, dots, 0) \
+f("He") &= (0, 1, dots, 0) \
+dots.v
+$
+
+== Embeddings
+A solution that often works better is to learn a list of numbers (a _vector_) for each potential
+input. This lets us model how different inputs might be similar.
+
+$
+f("H") &= (1.2, 4.3, dots, -2.3) \
+f("He") &= (1.3, -3.1, dots, 0.3) \
+dots.v
+$
+
+In a language model, maybe the embeddings for _green_ and _verde_ are similar, so the model can
+apply what it learns in one language for another language.
+
+== Embeddings
+#align(center, image("images/embeddings.png", height: 90%))
+
+== Prelude: Lines
+We want a flexible kind of model that can represent all kinds of functions.
+
+For computational reasons, we want this to be built out of simple building blocks.
+
+What's a simple example of a relationship between some $x$ and $y$? A line!
+
+$ y = a x + b $
+== Composing Neurons
+What amazing things can this model do? I'm so excited to find out!
+#align(center, image("images/neural_network.png", height: 80%))
+
+== Composing Neurons
+This is still just a line. We just made an overly complicated line.
+#align(center, image("images/sad-pikachu.gif", height: 80%))
+
+== Beyond Linearity 
+
+To prevent this network from just being a fancy line, we need to use some function that isn't just
+multiplication or addition. Basically any function will do.
+
+This is called an _activation function_, and people have tried a *lot* of them. Let's use a simple
+one: the _rectified linear unit_, or ReLU:
+
+$ "ReLU"(x) = max(x, 0) $
+
+Above 0, this just returns the input, but below 0 it returns 0.
+
+Let's add this function to the inner neurons:
+
+== Beyond Linearity
+#align(center, image("images/neural_network_relu.png", height: 90%))
+
+== Example
+
+With enough neurons, these networks are extremely flexible. In fact, you can show that they can
+approximate _any_ smooth function with enough neurons.
+
+https://www.desmos.com/calculator/jtcieaiwa7
+
+= Specialized Neural Networks
+== Specialized Neural Networks
+In theory, with enough neurons even a simple network will work.
+
+In practice, some ways of connecting neurons are better than others for specific tasks. The work of
+an AI researcher is often trying to find good ways of building networks for a specific task.
+
+Remember: no matter how complex diagrams get, it's just a big equation with sliders. The training
+process is the same.
+
+== Convolutional Neural Network
+Neurons respond in the same way to a pattern regardless of where it appears in an image.
+
+#align(center, image("images/cnn.png", height: 80%))
+
+== Transformer
+The T in ChatGPT, so you might have heard of this one!
+
+In a sequence, compares each element to the others and uses a weighted average of the other values
+depending on how much each element matches. A neural network is used to do the comparison.
+
+This is called _attention_, and it's very useful for certain kinds of tasks. Here, pronoun shouldn't change depending on the activity: ideally, it would just be estimated from the name.
+
+
+#quote([  
+  *Nicholas* slipped spectacularly on the ice. *He* faceplanted into the earth.  
+])
+
+
+== Graph Neural Network
+When we say _graph_, we mean a network of nodes and edges. I'll refer to the chart kind of graph as
+a _plot._
+
+In a graph neural network, we define functions using neural networks that control how information is
+communicated between nodes. In the basic formulation, each node sends a _message_ to its neighbors
+and then each node is updated using those messages.
+
+#align(center, image("images/molecule.png", height: 50%))
+
+
+== Graph Neural Network
+
+https://distill.pub/2021/gnn-intro/
+
+= A Practical Demonstration: the Sequel
