@@ -38,14 +38,6 @@ pre-programmed algorithm.. More formally:
 and performance measure P, if its performance at tasks in T, as measured by P, improves with
 experience E.], attribution: [Tom Mitchell, *Machine Learning*])
 
-== Artificial Intelligence (AI) 
-
-Artificial intelligence (AI) has a broader definition: computers that behave intelligently in some
-way. This is broader than machine learning and includes algorithms that don't learn directly from
-experience.
-
-We won't be talking about non-ML AI right now, so let's get back to ML.
-
 == Supervised Learning
 
 - Prediction of some _target_, often $y$, from labeled training data, often $X$.
@@ -93,9 +85,9 @@ There are a couple common metrics you will see:
 
 *Mean Squared Error (MSE)*: $"mean"((y - hat(y))^2)$
 
-*Root Mean Squared Error (RMSE)*: $sqrt("mean"((y - hat(y))^2))$
+*Root Mean Squared Error (RMSE aka L2)*: $sqrt("mean"((y - hat(y))^2))$
 
-*Mean Absolute Error (MAE)*: $"mean"(|y - hat(y)|)$
+*Mean Absolute Error (MAE aka L1)*: $"mean"(|y - hat(y)|)$
 
 $R^2$: $display(1 - "Var"(y - hat(y))/("Var"(y)))$
 
