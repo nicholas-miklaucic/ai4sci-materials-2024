@@ -76,7 +76,7 @@ To circumvent any difficulties, we can instead download our training data from
 the Internet directly.
 
 ```bash
-wget https://github.com/nicholas-miklaucic/ai4sci-materials-2024/raw/main/GNN_training_data.zip
+wget https://github.com/nicholas-miklaucic/ai4sci-materials-2024/raw/main/alignn/GNN_training_data.zip
 unzip GNN_training_data.zip
 ```
 
@@ -115,7 +115,99 @@ Now we can run ALIGNN using a config file and training data from the folders we
 downloaded:
 
 ```bash
-python alignn/train_alignn.py --config_name=/home/[your_user]/GNN_training_data/ALIGNN_heat_capacity_data/config_example.json --root_dir=/home/[your_user]/GNN_training_data/ALIGNN_heat_capacity_data/
+python alignn/train_alignn.py --config_name=/home/[your_user]/GNN_training_data/ALIGNN_heat_capacity_data/config_example.json --root_dir=/home/[your_user]/GNN_training_data/ALIGNN_heat_capacity_data/ --output_dir=/home/[your_user]/results/heat
 ```
 
 You should start seeing the loss go down as it trains.
+
+### Submitting a Batch Job
+
+We don't want to have to babysit our jobs. If something will take a long time,
+ideally we can just start it and then come back when it's done.
+
+We can take these commands and move them to a file we can ask the HPC to run.
+
+Copy the necessary scripts into your home directory:
+
+```bash
+cp /home/miklaucn/run_alignn.sh ~
+cp /home/miklaucn/alignn.slurm ~
+```
+
+We'll make two directories to store our logs and results. `cd`, without any
+arguments, goes to the home directory.
+
+```bash
+cd
+mkdir jobs
+mkdir results
+```
+
+Now, we need to edit these files to replace `miklaucn` with your username:
+
+```bash
+nano ~/run_alignn.sh
+nano ~/alignn.slurm
+```
+
+To keep our home directory clean, we can put the logs and results in separate
+folders:
+
+When that's done, we can ask the HPC to run our job:
+
+```bash
+sbatch alignn.slurm
+```
+
+To check how our job is doing, we can see the queue with
+
+```bash
+squeue
+```
+
+If you see that the status is `R`, that means it's running. It might take a few
+minutes.
+
+Ideally, eventually you'll see that `squeue` no longer shows your `alignn` job.
+That means it should have worked. You can see what the logs were by first
+looking at your `logs/` directory:
+
+```bash
+ll logs/
+```
+
+If you've submitted multiple times, find the most recent log name. Then do
+
+```bash
+cat logs/log-[LOG_ID].node[NODE_ID].out
+```
+
+To see any errors:
+
+```
+cat logs/log-[LOG_ID].node[NODE_ID].err
+```
+
+### Copying Results
+
+At this point, you may be interested in getting the results off the HPC so you
+can visualize and analyze them more comfortably.
+
+`scp` and `rsync` should work, as above, but I needed a workaround.
+
+First, zip the results folder:
+
+```bash
+zip -r res results/*
+```
+
+Now you should have a `res.zip` file.
+
+Then
+
+```bash
+curl bashupload.com -T res.zip
+```
+
+When it's done, go to the URL that it prints out in your browser. Download that
+results file.
